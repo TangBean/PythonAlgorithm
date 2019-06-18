@@ -10,11 +10,15 @@ class Solution:
     思路：利用快排的思想得到 nums 的中位数，然后把小于中位数的数放在 (i & 1) == 0 的位置，大于中位数的数放在 (i & 1) == 1 的位置。
     """
     def wiggleSort(self, nums: List[int]) -> None:
-        n_2 = int((len(nums) + 1) / 2)
-        self.mid_num(nums)
-        if n_2 > 1:
-            for i in range(1, n_2, 2):
-                nums[i], nums[i+n_2] = nums[i+n_2], nums[i]
+        mid_index = self.mid_num(nums)
+        if len(nums) % 2 == 1:
+            nums[mid_index], nums[len(nums)-1] = nums[len(nums)-1], nums[mid_index]
+        else:
+            mid_index += 1
+        for i in range(0, len(nums)):
+            if i % 2 != 0:
+                nums[i], nums[mid_index] = nums[mid_index], nums[i]
+                mid_index += 1
 
     def mid_num(self, nums):
         N = len(nums)
@@ -25,6 +29,7 @@ class Solution:
                 index = self.partition(nums, index+1, N-1, mid_index)
             else:
                 index = self.partition(nums, 0, index-1, mid_index)
+        return mid_index
 
     def partition(self, nums, lo, hi, pos):
         nums[lo], nums[pos] = nums[pos], nums[lo]
@@ -40,12 +45,14 @@ class Solution:
 if __name__ == '__main__':
     s = Solution()
     # nums = [1, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2]
+    # nums = [1, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2]
     # nums = [1, 5, 1, 1, 6, 4]
-    nums = [1, 3, 2, 2, 3, 1]
+    # nums = [1, 3, 2, 2, 3, 1]
+    nums = [1, 3, 2, 2, 3, 1];
 
-    # print(s.partition(nums, 0, len(nums)-1, 0))
-    # s.mid_num(nums)
-    # print(nums)
+    print(s.partition(nums, 0, len(nums)-1, 0))
+    s.mid_num(nums)
+    print(nums)
 
     s.wiggleSort(nums)
     print(nums)
